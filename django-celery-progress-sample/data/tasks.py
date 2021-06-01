@@ -14,6 +14,9 @@ logger = get_task_logger(__name__)
 @task(name="send_confirmation_email_task")
 def extract_file_and_save_info_into_db(fileinfo_id):
     from .models import FileInfo, Data
+
+    deleted_previous_data = Data.objects.all().delete()
+
     file_info = FileInfo.objects.get(id=fileinfo_id)
     logger.info(f'Processing FileInfo ID: {fileinfo_id}')
     # import the excel
@@ -91,28 +94,6 @@ def extract_file_and_save_info_into_db(fileinfo_id):
     except Exception as e:
         print(e)
 
-
-'''
-dic_data = {
-    'Products': ['mango', 'banana', 'banana'],
-    'Delivery Date': [2020, 2021, 2020],
-    'Quantity': [1, 2, 3]
-}
-data = {}
-for product, delivery_date, quantity in zip(dic_data['Products'], dic_data['Delivery Date'], dic_data['Quantity']):
-    if not data.get(product):
-        data[product] = {}
-    if not data[product].get(delivery_date):
-        data[product][delivery_date] = 1
-    else:
-        data[product][delivery_date] += quantity
-        
-print(data)
-
-for product in data.items():
-    print(product)
-'''
-    
 @task(name="remove_file_from_storage")
 def remove_file_from_storage(folder_path):
     import shutil
