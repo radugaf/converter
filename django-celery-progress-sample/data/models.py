@@ -9,9 +9,21 @@ PRODUCT_NAME = (
     ("Product-C", "Product C"),
 )
 
+class FileInfo(models.Model):
+    file = models.FileField()
+    status = models.CharField(
+        max_length=250,
+        choices=(
+            ('PENDING', 'PENDING'),
+            ('PROCESSING', 'PROCESSING'),
+            ('PROCESSED', 'PROCESSED'),
+        ),
+        default='PENDING'
+    )
 
 class Data(models.Model):
-    title = MultiSelectField(max_length=100, blank=True, null=True, choices=PRODUCT_NAME)
+    file_info = models.ForeignKey(FileInfo, on_delete=models.SET_NULL, null=True)
+    title = models.CharField(max_length=100, blank=True, null=True)
     delivery_date = models.DateField()
     quantity = models.IntegerField(default=1)
 

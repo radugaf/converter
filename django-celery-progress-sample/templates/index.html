@@ -1,3 +1,4 @@
+
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -8,12 +9,23 @@
     <title>Django Celery Progress Sample</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    
+    <style>
+        li {
+            list-style-type: none;
+        }
+    </style>
 </head>
 
 <body>
     {% include "navbar.html" %}
-
-    <div class="container-fluid">
+        {% if messages %}
+            <div class="container-fluid">
+                {% for message in messages %}
+                <li{% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </div>
+        {% endif %}
         <div class="row mt-5">
             <div class="col-md-6 offset-md-3 col-lg-6 offset-lg-3 sm-12 mb-5">
                 <div class="card bg-light">
@@ -25,20 +37,12 @@
                                     enctype="multipart/form-data">
                                     {% csrf_token %}
                                     <div class="form-inline">
-                                        <input type="file" name="document_file" class="form-control col mr-2" required>
+                                        <input type="file" name="file" class="form-control col mr-2" required>
                                         <button type="submit" class="btn btn-primary">Import</button>
                                     </div>
                                 </form>
                             </div>
-                            <div id="import-progress-container" class="col-md-12">
-                                <div id="import-progress-message">Waiting event . . .</div>
-                                <div class="progress">
-                                    <div id="import-progress-bar"
-                                        class="progress-bar progress-bar-striped progress-bar-animated"
-                                        role="progressbar" aria-valuemin="0" aria-valuemax="100">
-                                    </div>
-                                </div>
-                            </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -49,17 +53,15 @@
                         <h5 class="card-title">Export user into excel</h5>
                         <div class="row">
                             <div class="col-md-12 mb-3">
-                                <button class="btn btn-primary" onclick="runExportData()">Export</button>
-                            </div>
-                            <div id="export-progress-container" class="col-md-12">
-                                <div id="export-progress-message">Waiting event . . .</div>
-                                <div class="progress">
-                                    <div id="export-progress-bar"
-                                        class="progress-bar progress-bar-striped progress-bar-animated"
-                                        role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                                <form id="form-import" method="POST" action="{% url 'export' %}" target="_blank">
+                                    {% csrf_token %}
+                                    <div class="form-inline">
+                                        <input class="form-control col mr-2" type="date" name="target_date">
+                                        <button class="btn btn-primary" type="submit">Export</button>
                                     </div>
-                                </div>
+                                </form>
                             </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -76,7 +78,9 @@
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
     <script src="{% static 'celery_progress/celery_progress.js' %}"></script>
+    
     <script>
+        /*
         $(function () {
             $("#form-import").on("submit", (e) => {
                 e.preventDefault()
@@ -145,6 +149,7 @@
                 })
             }
         });
+        */
     </script>
 </body>
 

@@ -19,10 +19,14 @@ from django.contrib import admin
 from django.urls import path
 from django.urls.conf import include
 
-# from .views import (IndexTemplateView, download_file_view, export_user_view,
-#                     get_progress_view, import_user_view)
+from .views import *
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
-    path('', include('data.urls')),
+    path("", IndexTemplateView.as_view(), name="index"),
+    # path("", index, name="index"),
+    path("export-file/", export_file, name="export"),
+    path("import-file/", import_file, name="import"),
+    path("celery-progress/", get_progress_view, name="progress"),
+    path("download-file/", download_file_view, name="download"),
 ]
+

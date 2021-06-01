@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     "celery_progress",
     "django_extensions",
     "corsheaders",
-    "core",
+    # "core",
     'multiselectfield',
     "data",
 ]
